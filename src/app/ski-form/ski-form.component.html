@@ -1,0 +1,85 @@
+
+  <div class="container">
+      <div [hidden]="submitted">
+      <h2>Let us help you choose the best skis for you!</h2>
+      <form (ngSubmit)="onSubmit()" [formGroup]="skiForm" id="Login">
+          
+        <div class="form-group" [ngClass]="{'has-error': height.errors && (height.touched || height.dirty)}">
+          <label for="height">Height (cm) </label>
+          <input type="string" class="form-control" id="height" required 
+          name="height" formControlName="height" >
+          <div *ngIf="height.errors?.required && ((height.touched || height.dirty))" class="alert alert-danger">
+            Height is required
+          </div>
+          <div *ngIf="height.errors?.min || height.errors?.max" class="alert alert-danger">
+            Height format is 0 cm - 220 cm
+          </div>
+          <div *ngIf="height.errors?.isNumber && ((height.touched || height.dirty))" class="alert alert-danger">
+            Height has to be a number
+          </div>
+        </div>
+    
+        <div class="form-group" [ngClass]="{'has-error': age.errors && (age.touched || age.dirty)}">
+          <label for="age">Age</label>
+          <input type="string" class="form-control" id="age" name="age" formControlName="age" required>
+          <div *ngIf="age.errors?.required && ((age.touched || age.dirty))" class="alert alert-danger">
+            Age is required
+          </div>
+          <div *ngIf="age.errors?.min || age.errors?.max" class="alert alert-danger">
+            Age format is 0 - 100 years
+          </div>
+          <div *ngIf="age.errors?.isNumber && ((age.touched || age.dirty))" class="alert alert-danger">
+            Age has to be a number
+          </div>
+        </div>
+
+        <div class="form-group" [ngClass]="{'has-error': skiStyle.errors && (skiStyle.touched || skiStyle.dirty)}">
+          <label for="skiStyle">Ski style</label>
+          <select class="form-control" id="skiStyle" name="skiStyle" formControlName="style" required>
+            <option *ngFor="let style of skiStyles" [value]="style">{{style}}</option>
+          </select>
+          <div *ngIf="skiStyle.errors?.required && ((skiStyle.touched || skiStyle.dirty))" class="alert alert-danger">
+            Ski style is required
+          </div>
+        </div>
+    
+        <button type="submit" (click)="skiLength()" [disabled]="!skiForm.valid" class="btn btn-success">Get recommendation</button> 
+        <button type="button" class="btn btn-outline-secondary" (click)="clearForm()">Clear form</button>
+      </form>
+      </div>
+    </div>
+
+    <div [hidden]="!submitted" class='container'>
+      <h2 class="recommendation">We recommend skis that are: <span> {{ recommendation }} </span></h2>
+    
+        <h4>You submitted the following:</h4>
+        <div class="row">
+          <div class="col-xs-3">Height</div>
+          <div class="col-xs-9">{{ height.value }}</div>
+        </div>
+        <div class="row">
+          <div class="col-xs-3">Age</div>
+          <div class="col-xs-9">{{ age.value }}</div>
+        </div>
+        <div class="row">
+          <div class="col-xs-3">Ski style</div>
+          <div class="col-xs-9">{{ skiStyle.value }}</div>
+        </div>
+        <br>
+        <button class="btn btn-primary" (click)="submitted=false">Edit</button>
+
+        <div *ngIf="skiStyle.value === 'Freestyle'" class="regulationsInfo">
+            * According to the competition rules, ski length should not exceed more than 10 cm of a person's height
+          </div>
+      </div>
+
+
+<!--   
+<p>Rekommendationer vid beräkning av skidlängd</p>
+<ol>
+  <li>Barn 0-4 år: kroppslängd + 0 cm.</li>
+  <li>Barn 5-8 år: kroppslängd + 10 till 20 cm.</li>
+  <li>Klassisk: kroppslängd + 20cm. Klassiska skidor tillverkas bara till längder upp till 207cm.</li>
+  <li>Fristil: kroppslängd + 10 till 15 cm. Enligt tävlingsreglerna får inte skidan understiga kroppslängden med mer än 10cm.</li>
+</ol>
+--> 
